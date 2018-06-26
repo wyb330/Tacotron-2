@@ -4,6 +4,7 @@ import os
 from tqdm import tqdm
 from datasets import preprocessor
 from hparams import hparams
+from datasets import krspeech
 
 
 def preprocess(args, input_folders, out_dir, hparams):
@@ -13,17 +14,22 @@ def preprocess(args, input_folders, out_dir, hparams):
     os.makedirs(mel_dir, exist_ok=True)
     os.makedirs(wav_dir, exist_ok=True)
     os.makedirs(linear_dir, exist_ok=True)
-    metadata = preprocessor.build_from_path(hparams, input_folders, mel_dir, linear_dir, wav_dir, args.n_jobs,
-                                            tqdm=tqdm)
+    if args.dataset == 'KRSPEECH':
+        metadata = krspeech.build_from_path(hparams, input_folders, mel_dir, linear_dir, wav_dir, args.n_jobs,
+                                                tqdm=tqdm)
+    else:
+        metadata = preprocessor.build_from_path(hparams, input_folders, mel_dir, linear_dir, wav_dir, args.n_jobs,
+                                                tqdm=tqdm)
     write_metadata(metadata, out_dir)
 
 
 def write_metadata(metadata, out_dir):
     with open(os.path.join(out_dir, 'train.txt'), 'w', encoding='utf-8') as f:
         for m in metadata:
-            f.write('|'.join([str(x) for x in m]) + '\n')
-    mel_frames = sum([int(m[4]) for m in metadata])
-    timesteps = sum([int(m[3]) for m in metadata])
+            if m:
+                f.write('|'.join([str(x) for x in m]) + '\n')
+    mel_frames = sum([int(m[4]) for m in metadata if m])
+    timesteps = sum([int(m[3]) for m in metadata if m])
     sr = hparams.sample_rate
     hours = timesteps / sr / 3600
     print('Write {} utterances, {} mel frames, {} audio timesteps, ({:.2f} hours)'.format(
@@ -37,13 +43,15 @@ def norm_data(args):
     merge_books = (args.merge_books == 'True')
 
     print('Selecting data folders..')
-    supported_datasets = ['LJSpeech-1.0', 'LJSpeech-1.1', 'M-AILABS']
+    supported_datasets = ['LJSpeech-1.0', 'LJSpeech-1.1', 'M-AILABS', 'KRSPEECH']
     if args.dataset not in supported_datasets:
         raise ValueError('dataset value entered {} does not belong to supported datasets: {}'.format(
             args.dataset, supported_datasets))
 
     if args.dataset.startswith('LJSpeech'):
         return [os.path.join(args.base_dir, args.dataset)]
+    elif args.dataset == 'KRSPEECH':
+        return args.base_dir
 
     if args.dataset == 'M-AILABS':
         supported_languages = ['en_US', 'en_UK', 'fr_FR', 'it_IT', 'de_DE', 'es_ES', 'ru_RU',
@@ -86,10 +94,10 @@ def run_preprocess(args, hparams):
 def main():
     print('initializing preprocessing..')
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='D:/voice')
+    parser.add_argument('--base_dir', default='D:/voice/korean/son')
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides as a comma-separated list of name=value pairs')
-    parser.add_argument('--dataset', default='LJSpeech-1.0')
+    parser.add_argument('--dataset', default='KRSPEECH')  # ['LJSpeech-1.0', 'LJSpeech-1.1', 'M-AILABS', 'KRSPEECH']
     parser.add_argument('--language', default='en_US')
     parser.add_argument('--voice', default='female')
     parser.add_argument('--reader', default='mary_ann')

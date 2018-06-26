@@ -87,7 +87,7 @@ def train(args, log_dir, hparams):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='D:/voice')
+    parser.add_argument('--base_dir', default='D:/voice/korean/son')
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides as a comma-separated list of name=value pairs')
     parser.add_argument('--tacotron_input', default='training_data/train.txt')
@@ -104,7 +104,7 @@ def main():
                         help='Steps between running summary ops')
     parser.add_argument('--checkpoint_interval', type=int, default=500,
                         help='Steps between writing checkpoints')
-    parser.add_argument('--eval_interval', type=int, default=200,
+    parser.add_argument('--eval_interval', type=int, default=500,
                         help='Steps between eval on test data')
     parser.add_argument('--tacotron_train_steps', type=int, default=20000,
                         help='total number of tacotron training steps')
