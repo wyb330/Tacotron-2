@@ -100,7 +100,7 @@ def _process_utterance(mel_dir, linear_dir, wav_dir, index, wav_path, text, hpar
     # Ensure time resolution adjustement between audio and mel-spectrogram
     fft_size = hparams.n_fft if hparams.win_size is None else hparams.win_size
     l, r = audio.pad_lr(wav, fft_size, audio.get_hop_size(hparams))
- 
+
     # Zero pad for quantized signal
     out = np.pad(out, (l, r), mode='constant', constant_values=constant_values)
     assert len(out) >= mel_frames * audio.get_hop_size(hparams)
