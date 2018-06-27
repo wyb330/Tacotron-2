@@ -2,7 +2,23 @@ import matplotlib
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
+from matplotlib.pyplot import rc
 import numpy as np
+
+
+FONT_NAME = "NanumBarunGothic"
+
+
+def check_font():
+    flist = font_manager.findSystemFonts()
+    names = [font_manager.FontProperties(fname=fname).get_name() for fname in flist]
+    if not (FONT_NAME in names):
+        font_manager._rebuild()
+
+
+check_font()
+rc('font', family=FONT_NAME)
 
 
 def split_title_line(title_text, max_words=5):

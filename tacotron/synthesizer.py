@@ -8,6 +8,7 @@ from datasets import audio
 import pyaudio
 import wave
 from infolog import log
+from tacotron.utils.text_kr import h2j, j2h
 
 
 class Synthesizer:
@@ -100,6 +101,8 @@ class Synthesizer:
             plot.plot_alignment(alignment, os.path.join(log_dir, 'plots/speech-alignment-{:05d}.png'.format(index)),
                                 info='{}'.format(text), split_title=True)
 
+            if self._hparams.lang == 'kr':
+                text = j2h(text)
             # save mel spectrogram plot
             plot.plot_spectrogram(mels, os.path.join(log_dir, 'plots/speech-mel-{:05d}.png'.format(index)),
                                   info='{}'.format(text), split_title=True)

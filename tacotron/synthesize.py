@@ -1,13 +1,11 @@
-import argparse
 import os
-import re
 from hparams import hparams, hparams_debug_string
 from tacotron.synthesizer import Synthesizer
-import time
 from tqdm import tqdm
 from time import sleep
 from infolog import log
 import tensorflow as tf
+from tacotron.utils.text_kr import h2j, j2h
 
 
 def generate_fast(model, text):
@@ -58,7 +56,9 @@ def run_eval(args, checkpoint_path, output_dir, hparams, sentences):
 
     with open(os.path.join(eval_dir, 'map.txt'), 'w') as file:
         for i, text in enumerate(tqdm(sentences)):
-            start = time.time()
+            if hparams.lang == 'kr':
+                # 한글을 자소 단위로 쪼갠다.
+                text = h2j(text)
             mel_filename = synth.synthesize(text, i + 1, eval_dir, log_dir, None)
 
             file.write('{}|{}\n'.format(text, mel_filename))
@@ -79,7 +79,7 @@ def run_synthesis(args, checkpoint_path, output_dir, hparams):
         # Create output path if it doesn't exist
         os.makedirs(synth_dir, exist_ok=True)
 
-    metadata_filename = os.path.join(args.input_dir, 'train.txt')
+    metadata_filename = os.path.join(args.base_dir, args.input_dir, 'train.txt')
     log(hparams_debug_string())
     synth = Synthesizer()
     synth.load(checkpoint_path, hparams, gta=GTA)
@@ -90,8 +90,8 @@ def run_synthesis(args, checkpoint_path, output_dir, hparams):
         log('Loaded metadata for {} examples ({:.2f} hours)'.format(len(metadata), hours))
 
     log('starting synthesis')
-    mel_dir = os.path.join(args.input_dir, 'mels')
-    wav_dir = os.path.join(args.input_dir, 'audio')
+    mel_dir = os.path.join(args.base_dir, args.input_dir, 'mels')
+    wav_dir = os.path.join(args.base_dir, args.input_dir, 'audio')
     with open(os.path.join(synth_dir, 'map.txt'), 'w') as file:
         for i, meta in enumerate(tqdm(metadata)):
             text = meta[5]
