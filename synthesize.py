@@ -46,7 +46,7 @@ def main():
     parser.add_argument('--name', help='Name of logging directory if the two models were trained together.')
     parser.add_argument('--tacotron_name', help='Name of logging directory of Tacotron. If trained separately')
     parser.add_argument('--wavenet_name', help='Name of logging directory of WaveNet. If trained separately')
-    parser.add_argument('--model', default='Tacotron-2')
+    parser.add_argument('--model', default='Tacotron')
     parser.add_argument('--input_dir', default='training_data/', help='folder to contain inputs sentences/targets')
     parser.add_argument('--mels_dir', default='tacotron_output/eval/',
                         help='folder to contain mels to synthesize audio from using the Wavenet')
@@ -54,7 +54,7 @@ def main():
     parser.add_argument('--mode', default='eval', help='mode of run: can be one of {}'.format(accepted_modes))
     parser.add_argument('--GTA', default='True',
                         help='Ground truth aligned synthesis, defaults to True, only considered in synthesis mode')
-    parser.add_argument('--text_list', default='',
+    parser.add_argument('--text_list', default='D:/voice/korean/son/eval.txt',
                         help='Text file contains list of texts to be synthesized. Valid if mode=eval')
     args = parser.parse_args()
 

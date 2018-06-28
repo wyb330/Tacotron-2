@@ -108,3 +108,21 @@ class Synthesizer:
                                   info='{}'.format(text), split_title=True)
 
         return mel_filename
+
+    def predict(self, text, out_dir):
+        hparams = self._hparams
+        cleaner_names = [x.strip() for x in hparams.cleaners.split(',')]
+        seq = text_to_sequence(text, cleaner_names)
+        feed_dict = {
+            self.model.inputs: [np.asarray(seq, dtype=np.int32)],
+            self.model.input_lengths: np.asarray([len(seq)], dtype=np.int32),
+        }
+
+        mels, alignment = self.session.run([self.mel_outputs, self.alignment], feed_dict=feed_dict)
+        mels = mels.reshape(-1, hparams.num_mels)  # Thanks to @imdatsolak for pointing this out
+
+        # Generate wav and read it
+        wav = audio.inv_mel_spectrogram(mels.T, hparams)
+        audio.save_wav(wav, out_dir, sr=hparams.sample_rate)  # Find a better way
+
+        return out_dir
