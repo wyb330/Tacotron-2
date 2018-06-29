@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+import json
+
 
 # Default hyperparameters
 hparams = tf.contrib.training.HParams(
@@ -254,3 +256,10 @@ def hparams_debug_string():
     values = hparams.values()
     hp = ['  %s: %s' % (name, values[name]) for name in sorted(values) if name != 'sentences']
     return 'Hyperparameters:\n' + '\n'.join(hp)
+
+
+def load_from_json(json_file):
+    with open(json_file, 'r') as fp:
+        return hparams.parse_json(fp.read())
+
+
