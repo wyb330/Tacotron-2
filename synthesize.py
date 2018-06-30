@@ -45,7 +45,7 @@ def main():
     accepted_modes = ['eval', 'synthesis', 'live']
     parser = argparse.ArgumentParser()
     parser.add_argument('--checkpoint', default='pretrained/', help='Path to model checkpoint')
-    parser.add_argument('--hparams', default='hparams.json',
+    parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides from a json file')
     parser.add_argument('--name', help='Name of logging directory if the two models were trained together.')
     parser.add_argument('--tacotron_name', help='Name of logging directory of Tacotron. If trained separately')

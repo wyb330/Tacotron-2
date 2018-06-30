@@ -1,0 +1,28 @@
+Scientists at the CERN laboratory say they have discovered a new particle.|tacotron_output/eval\speech-mel-00001.npy
+There's a way to measure the acute emotional intelligence that has never gone out of style.|tacotron_output/eval\speech-mel-00002.npy
+President Trump met with other leaders at the Group of 20 conference.|tacotron_output/eval\speech-mel-00003.npy
+Generative adversarial network or variational auto-encoder.|tacotron_output/eval\speech-mel-00004.npy
+Basilar membrane and otolaryngology are not auto-correlations.|tacotron_output/eval\speech-mel-00005.npy
+He has read the whole thing.|tacotron_output/eval\speech-mel-00006.npy
+He reads books.|tacotron_output/eval\speech-mel-00007.npy
+Don't desert me here in the desert!|tacotron_output/eval\speech-mel-00008.npy
+He thought it was time to present the present.|tacotron_output/eval\speech-mel-00009.npy
+Thisss isrealy awhsome.|tacotron_output/eval\speech-mel-00010.npy
+Punctuation sensitivity is working.|tacotron_output/eval\speech-mel-00011.npy
+The buses aren't the problem, they actually provide a solution.|tacotron_output/eval\speech-mel-00012.npy
+The buses aren't the PROBLEM, they actually provide a SOLUTION.|tacotron_output/eval\speech-mel-00013.npy
+The quick brown fox jumps over the lazy dog.|tacotron_output/eval\speech-mel-00014.npy
+does the quick brown fox jump over the lazy dog?|tacotron_output/eval\speech-mel-00015.npy
+Peter Piper picked a peck of pickled peppers. How many pickled peppers did Peter Piper pick?|tacotron_output/eval\speech-mel-00016.npy
+She sells sea-shells on the sea-shore. The shells she sells are sea-shells I'm sure.|tacotron_output/eval\speech-mel-00017.npy
+The blue lagoon is a nineteen eighty American romance adventure film.|tacotron_output/eval\speech-mel-00018.npy
+Tajima Airport serves Toyooka.|tacotron_output/eval\speech-mel-00019.npy
+Talib Kweli confirmed to AllHipHop that he will be releasing an album in the next year.|tacotron_output/eval\speech-mel-00020.npy
+the rest being provided with barrack beds, and in dimensions varying from thirty feet by fifteen to fifteen feet by ten.|tacotron_output/eval\speech-mel-00021.npy
+in giltspur street compter, where he was first lodged.|tacotron_output/eval\speech-mel-00022.npy
+a man named burnett came with his wife and took up his residence at whitchurch, hampshire, at no great distance from laverstock,|tacotron_output/eval\speech-mel-00023.npy
+it appears that oswald had only one caller in response to all of his fpcc activities,|tacotron_output/eval\speech-mel-00024.npy
+he relied on the absence of the strychnia.|tacotron_output/eval\speech-mel-00025.npy
+scoggins thought it was lighter.|tacotron_output/eval\speech-mel-00026.npy
+would, it is probable, have eventually overcome the reluctance of some of the prisoners at least|tacotron_output/eval\speech-mel-00027.npy
+Thank you so much for your support!|tacotron_output/eval\speech-mel-00028.npy
