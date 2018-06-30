@@ -107,5 +107,8 @@ venv.bak/
 logs-*/
 training_data/
 tacotron_output/
+*.npy
+*.npz
+
 
 
