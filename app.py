@@ -5,7 +5,7 @@ import os,traceback
 import hashlib
 from flask_cors import CORS
 from flask import Flask, request, render_template, jsonify, send_from_directory, send_file
-from tacotron.synthesizer import Synthesizer
+from multi_speaker.synthesizer import Synthesizer
 from hparams import hparams
 from pydub import silence, AudioSegment
 import tensorflow as tf
@@ -69,7 +69,7 @@ def generate_audio_response(text, speaker_id):
     os.makedirs(os.path.dirname(real_path), exist_ok=True)
 
     try:
-        synthesizer.predict(text, real_path)
+        synthesizer.predict(text, real_path, speaker_id)
     except Exception as e:
         traceback.print_exc()
         return jsonify(success=False), 400
@@ -122,10 +122,10 @@ def send_audio(path):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--load_path', default='logs-Tacotron/taco_pretrained/')
-    parser.add_argument('--num_speakers', default=1, type=int)
+    parser.add_argument('--load_path', default='logs-MultiSpeaker/taco_pretrained/')
+    parser.add_argument('--num_speakers', default=10, type=int)
     parser.add_argument('--port', default=51000, type=int)
-    parser.add_argument('--debug', default=True, type=bool)
+    parser.add_argument('--debug', default=False, type=bool)
     config = parser.parse_args()
 
     if os.path.exists(config.load_path):
