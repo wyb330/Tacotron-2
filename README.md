@@ -100,7 +100,7 @@ We are also running current tests on the [new M-AILABS speech dataset](http://ww
 
 After **downloading** the dataset, **extract** the compressed file, and **place the folder inside the cloned repository.**
 
-Multi Speaker Dataset
+Multi Speaker Dataset:
 [CSTR VCTK Corpus](http://homepages.inf.ed.ac.uk/jyamagis/page3/page58/page58.html)
 
 # Preprocessing

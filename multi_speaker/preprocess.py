@@ -4,7 +4,6 @@ import os
 from tqdm import tqdm
 from datasets import preprocessor
 from hparams import hparams
-from datasets import krspeech
 from datasets import vctk
 
 

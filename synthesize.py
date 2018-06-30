@@ -1,14 +1,18 @@
 import argparse
 from tacotron.synthesize import tacotron_synthesize
 from wavenet_vocoder.synthesize import wavenet_synthesize
+from multi_speaker.synthesize import multispeaker_synthesize
 from infolog import log
-from hparams import hparams
+from hparams import hparams, load_from_json
 from warnings import warn
 import os
 
 
 def prepare_run(args):
-    modified_hp = hparams.parse(args.hparams)
+    if os.path.exists(args.hparams):
+        modified_hp = load_from_json(args.hparams)
+    else:
+        modified_hp = hparams.parse(args.hparams)
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
     run_name = args.name or args.tacotron_name or args.model
@@ -41,12 +45,12 @@ def main():
     accepted_modes = ['eval', 'synthesis', 'live']
     parser = argparse.ArgumentParser()
     parser.add_argument('--checkpoint', default='pretrained/', help='Path to model checkpoint')
-    parser.add_argument('--hparams', default='',
-                        help='Hyperparameter overrides as a comma-separated list of name=value pairs')
+    parser.add_argument('--hparams', default='hparams.json',
+                        help='Hyperparameter overrides from a json file')
     parser.add_argument('--name', help='Name of logging directory if the two models were trained together.')
     parser.add_argument('--tacotron_name', help='Name of logging directory of Tacotron. If trained separately')
     parser.add_argument('--wavenet_name', help='Name of logging directory of WaveNet. If trained separately')
-    parser.add_argument('--model', default='Tacotron')
+    parser.add_argument('--model', default='MultiSpeaker')
     parser.add_argument('--input_dir', default='training_data/', help='folder to contain inputs sentences/targets')
     parser.add_argument('--mels_dir', default='tacotron_output/eval/',
                         help='folder to contain mels to synthesize audio from using the Wavenet')
@@ -54,11 +58,11 @@ def main():
     parser.add_argument('--mode', default='eval', help='mode of run: can be one of {}'.format(accepted_modes))
     parser.add_argument('--GTA', default='True',
                         help='Ground truth aligned synthesis, defaults to True, only considered in synthesis mode')
-    parser.add_argument('--text_list', default='D:/voice/korean/son/eval.txt',
+    parser.add_argument('--text_list', default='',
                         help='Text file contains list of texts to be synthesized. Valid if mode=eval')
     args = parser.parse_args()
 
-    accepted_models = ['Tacotron', 'WaveNet', 'Both', 'Tacotron-2']
+    accepted_models = ['Tacotron', 'WaveNet', 'Both', 'Tacotron-2', 'MultiSpeaker']
 
     if args.model not in accepted_models:
         raise ValueError('please enter a valid model to synthesize with: {}'.format(accepted_models))
@@ -87,6 +91,8 @@ def main():
         _ = tacotron_synthesize(args, hparams, taco_checkpoint, sentences)
     elif args.model == 'WaveNet':
         wavenet_synthesize(args, hparams, wave_checkpoint)
+    elif args.model == 'MultiSpeaker':
+        multispeaker_synthesize(args, hparams, taco_checkpoint, sentences)
     elif args.model in ('Both', 'Tacotron-2'):
         synthesize(args, hparams, taco_checkpoint, wave_checkpoint, sentences)
     else:
