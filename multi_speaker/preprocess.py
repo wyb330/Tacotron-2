@@ -19,7 +19,7 @@ def preprocess(args, input_folders, out_dir, hparams):
         metadata = preprocessor.build_from_dirs(hparams, input_folders, datasets, mel_dir, linear_dir, wav_dir, args.n_jobs,
                                                 tqdm=tqdm)
     elif args.dataset == 'VCTK':
-        metadata = vctk.build_from_path(hparams, input_folders, mel_dir, linear_dir, wav_dir, args.n_jobs, tqdm=tqdm)
+        metadata = vctk.build_from_path(hparams, input_folders[0], mel_dir, linear_dir, wav_dir, args.n_jobs, tqdm=tqdm)
     else:
         raise ValueError('not support dataset')
 
@@ -64,22 +64,18 @@ def norm_data(args):
 
 def run_preprocess(args, hparams):
     input_folders = norm_data(args)
-    if len(input_folders) > 1:
-        output_folder = args.output
-    else:
-        output_folder = os.path.join(args.base_dir, args.output)
-
+    output_folder = args.output
     preprocess(args, input_folders, output_folder, hparams)
 
 
 def main():
     print('initializing preprocessing..')
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='D:/voice/LJSpeech-1.0,D:/voice/korean/son', required=True)
+    parser.add_argument('--base_dir', default='D:/voice/VCTK-Corpus', required=True)
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides as a comma-separated list of name=value pairs')
-    parser.add_argument('--dataset', default='LJSpeech-1.0,KRSPEECH', required=True)
-    parser.add_argument('--output', default='D:/voice/training_multi')
+    parser.add_argument('--dataset', default='VCTK', required=True)
+    parser.add_argument('--output', default='training_speaker')
     parser.add_argument('--n_jobs', type=int, default=cpu_count())
     args = parser.parse_args()
 

@@ -125,14 +125,14 @@ class Feeder:
         meta = self._test_meta[self._test_offset]
         self._test_offset += 1
 
-        text = meta[5]
+        speaker_id = int(meta[5])
+        text = meta[6]
 
         input_data = np.asarray(text_to_sequence(text, self._cleaner_names), dtype=np.int32)
         mel_target = np.load(os.path.join(self._mel_dir, meta[1]))
         # Create parallel sequences containing zeros to represent a non finished sequence
         token_target = np.asarray([0.] * (len(mel_target) - 1))
         linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
-        speaker_id = int(meta[6])
         return (input_data, mel_target, token_target, linear_target, len(mel_target), speaker_id)
 
     def make_test_batches(self):
@@ -190,7 +190,8 @@ class Feeder:
         meta = self._train_meta[self._train_offset]
         self._train_offset += 1
 
-        text = meta[5]
+        speaker_id = int(meta[5])
+        text = meta[6]
         if self._hparams.lang == 'kr':
             # 한글을 자소 단위로 쪼갠다.
             text = h2j(text)
@@ -200,7 +201,6 @@ class Feeder:
         # Create parallel sequences containing zeros to represent a non finished sequence
         token_target = np.asarray([0.] * (len(mel_target) - 1))
         linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
-        speaker_id = int(meta[6])
         return (input_data, mel_target, token_target, linear_target, len(mel_target), speaker_id)
 
     def _prepare_batch(self, batch, outputs_per_step):

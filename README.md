@@ -175,9 +175,9 @@ Dataset:
 [CSTR VCTK Corpus](http://homepages.inf.ed.ac.uk/jyamagis/page3/page58/page58.html)
 
 Preprocess:
-> python -m multi_speaker.preprocess --base_dir='datasets/vctk' --dataset='VCTK'
+> python -m multi_speaker.preprocess --base_dir=D:/voice/VCTK-Corpus --dataset=VCTK
 or
-> python -m multi_speaker.preprocess --base_dir='D:/voice/LJSpeech-1.0,D:/voice/korean/son' --dataset='LJSpeech-1.0,KRSPEECH --output='logs-MultiSpeaker/trainging_data'
+> python -m multi_speaker.preprocess --base_dir=D:/voice/LJSpeech-1.0,D:/voice/korean/son --dataset=LJSpeech-1.0,KRSPEECH --output=logs-MultiSpeaker/trainging_data
 
 
 

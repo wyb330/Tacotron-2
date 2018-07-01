@@ -94,7 +94,7 @@ def _process_utterance(mel_dir, linear_dir, wav_dir, index, wav_path, text, hpar
     np.save(os.path.join(wav_dir, audio_filename), out.astype(out_dtype), allow_pickle=False)
     np.save(os.path.join(mel_dir, mel_filename), mel_spectrogram.T, allow_pickle=False)
     np.save(os.path.join(linear_dir, linear_filename), linear_spectrogram.T, allow_pickle=False)
-    return (audio_filename, mel_filename, linear_filename, time_steps, mel_frames, text, speaker_id)
+    return (audio_filename, mel_filename, linear_filename, time_steps, mel_frames, speaker_id, text)
 
 
 def _trim_wav(wav):

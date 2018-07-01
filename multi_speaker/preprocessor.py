@@ -188,4 +188,4 @@ def _process_utterance(mel_dir, linear_dir, wav_dir, index, wav_path, text, spea
     np.save(os.path.join(linear_dir, linear_filename), linear_spectrogram.T, allow_pickle=False)
 
     # Return a tuple describing this training example
-    return (audio_filename, mel_filename, linear_filename, time_steps, mel_frames, text, speaker_id)
+    return (audio_filename, mel_filename, linear_filename, time_steps, mel_frames, speaker_id, text)
