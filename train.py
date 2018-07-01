@@ -92,7 +92,7 @@ def train(args, log_dir, hparams):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='/tmp', required=True)
+    parser.add_argument('--base_dir', default='dataset/VCTK-Corpus', required=True)
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides from a json file')
     parser.add_argument('--tacotron_input', default='training_data/train.txt')

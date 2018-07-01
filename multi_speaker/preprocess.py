@@ -71,7 +71,7 @@ def run_preprocess(args, hparams):
 def main():
     print('initializing preprocessing..')
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='D:/voice/VCTK-Corpus', required=True)
+    parser.add_argument('--base_dir', default='dataset/VCTK-Corpus', required=True)
     parser.add_argument('--dataset', default='VCTK', required=True)
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides as a comma-separated list of name=value pairs')
