@@ -100,9 +100,6 @@ We are also running current tests on the [new M-AILABS speech dataset](http://ww
 
 After **downloading** the dataset, **extract** the compressed file, and **place the folder inside the cloned repository.**
 
-Multi Speaker Dataset:
-[CSTR VCTK Corpus](http://homepages.inf.ed.ac.uk/jyamagis/page3/page58/page58.html)
-
 # Preprocessing
 Before running the following steps, please make sure you are inside **Tacotron-2 folder**
 
@@ -172,6 +169,17 @@ For the spectrogram prediction network (separately), there are **three types** o
 Synthesizing the **waveforms** conditionned on previously synthesized Mel-spectrograms (separately) can be done with:
 
 > python synthesize.py --model='WaveNet'
+
+# Multi Speaker
+Dataset:
+[CSTR VCTK Corpus](http://homepages.inf.ed.ac.uk/jyamagis/page3/page58/page58.html)
+
+Preprocess:
+> python -m multi_speaker.preprocess --base_dir='datasets/vctk' --dataset='VCTK'
+or
+> python -m multi_speaker.preprocess --base_dir='D:/voice/LJSpeech-1.0,D:/voice/korean/son' --dataset='LJSpeech-1.0,KRSPEECH --output='logs-MultiSpeaker/trainging_data'
+
+
 
 **Note:**
 - If model argument is not provided, synthesis will default to Tacotron-2 model synthesis. (End-to-End TTS)
