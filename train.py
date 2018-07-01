@@ -92,14 +92,14 @@ def train(args, log_dir, hparams):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_dir', default='datasets/VCTK-Corpus')
+    parser.add_argument('--base_dir', default='/tmp', required=True)
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides from a json file')
     parser.add_argument('--tacotron_input', default='training_data/train.txt')
     parser.add_argument('--wavenet_input', default='tacotron_output/gta/map.txt')
     parser.add_argument('--name', help='Name of logging directory.')
-    parser.add_argument('--model', default='MultiSpeaker')
-    parser.add_argument('--input_dir', default='training_data/', help='folder to contain inputs sentences/targets')
+    parser.add_argument('--model', default='MultiSpeaker', required=True)
+    parser.add_argument('--input_dir', default='training_speaker', help='folder to contain inputs sentences/targets')
     parser.add_argument('--output_dir', default='output/', help='folder to contain synthesized mel spectrograms')
     parser.add_argument('--mode', default='synthesis', help='mode for synthesis of tacotron after training')
     parser.add_argument('--GTA', default='True',

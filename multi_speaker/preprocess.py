@@ -72,10 +72,10 @@ def main():
     print('initializing preprocessing..')
     parser = argparse.ArgumentParser()
     parser.add_argument('--base_dir', default='D:/voice/VCTK-Corpus', required=True)
+    parser.add_argument('--dataset', default='VCTK', required=True)
     parser.add_argument('--hparams', default='',
                         help='Hyperparameter overrides as a comma-separated list of name=value pairs')
-    parser.add_argument('--dataset', default='VCTK', required=True)
-    parser.add_argument('--output', default='training_speaker')
+    parser.add_argument('--output', default='training_data')
     parser.add_argument('--n_jobs', type=int, default=cpu_count())
     args = parser.parse_args()
 
