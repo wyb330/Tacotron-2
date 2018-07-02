@@ -177,7 +177,9 @@ Dataset:
 
 Preprocess:
 > python -m multi_speaker.preprocess --base_dir=dataset/VCTK-Corpus --dataset=VCTK --output=dataset/VCTK-Corpus/trainging_data
+
 or
+
 > python -m multi_speaker.preprocess --base_dir=dataset/LJSpeech-1.0,dataset/korean/son --dataset=LJSpeech-1.0,KRSPEECH --output=dataset/MultiSpeaker/trainging_data
 
 Training:
