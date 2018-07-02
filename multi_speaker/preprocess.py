@@ -37,7 +37,7 @@ def write_metadata(metadata, out_dir):
     hours = timesteps / sr / 3600
     print('Write {} utterances, {} mel frames, {} audio timesteps, ({:.2f} hours)'.format(
         len(metadata), mel_frames, timesteps, hours))
-    print('Max input length (text chars): {}'.format(max(len(m[5]) for m in metadata)))
+    print('Max input length (text chars): {}'.format(max(len(m[6]) for m in metadata)))
     print('Max mel frames length: {}'.format(max(int(m[4]) for m in metadata)))
     print('Max audio timesteps length: {}'.format(max(m[3] for m in metadata)))
 

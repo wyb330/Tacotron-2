@@ -78,38 +78,38 @@ class Feeder:
                 tf.placeholder(tf.float32, shape=(None, None, hparams.num_mels), name='mel_targets'),
                 tf.placeholder(tf.float32, shape=(None, None), name='token_targets'),
                 tf.placeholder(tf.float32, shape=(None, None, hparams.num_freq), name='linear_targets'),
-                tf.placeholder(tf.int32, shape=(None,), name='targets_lengths'),
                 tf.placeholder(tf.int32, shape=(None,), name='speaker_ids'),
+                tf.placeholder(tf.int32, shape=(None,), name='targets_lengths'),
             ]
 
             # Create queue for buffering data
             queue = tf.FIFOQueue(8, [tf.int32, tf.int32, tf.float32, tf.float32, tf.float32, tf.int32, tf.int32],
                                  name='input_queue')
             self._enqueue_op = queue.enqueue(self._placeholders)
-            self.inputs, self.input_lengths, self.mel_targets, self.token_targets, self.linear_targets, self.targets_lengths, self.speaker_ids = queue.dequeue()
+            self.inputs, self.input_lengths, self.mel_targets, self.token_targets, self.linear_targets, self.speaker_ids, self.targets_lengths = queue.dequeue()
 
             self.inputs.set_shape(self._placeholders[0].shape)
             self.input_lengths.set_shape(self._placeholders[1].shape)
             self.mel_targets.set_shape(self._placeholders[2].shape)
             self.token_targets.set_shape(self._placeholders[3].shape)
             self.linear_targets.set_shape(self._placeholders[4].shape)
-            self.targets_lengths.set_shape(self._placeholders[5].shape)
-            self.speaker_ids.set_shape(self._placeholders[6].shape)
+            self.speaker_ids.set_shape(self._placeholders[5].shape)
+            self.targets_lengths.set_shape(self._placeholders[6].shape)
 
             # Create eval queue for buffering eval data
             eval_queue = tf.FIFOQueue(1, [tf.int32, tf.int32, tf.float32, tf.float32, tf.float32, tf.int32, tf.int32],
                                       name='eval_queue')
             self._eval_enqueue_op = eval_queue.enqueue(self._placeholders)
             self.eval_inputs, self.eval_input_lengths, self.eval_mel_targets, self.eval_token_targets, \
-            self.eval_linear_targets, self.eval_targets_lengths, self.eval_speaker_ids = eval_queue.dequeue()
+            self.eval_linear_targets, self.eval_speaker_ids, self.eval_targets_lengths = eval_queue.dequeue()
 
             self.eval_inputs.set_shape(self._placeholders[0].shape)
             self.eval_input_lengths.set_shape(self._placeholders[1].shape)
             self.eval_mel_targets.set_shape(self._placeholders[2].shape)
             self.eval_token_targets.set_shape(self._placeholders[3].shape)
             self.eval_linear_targets.set_shape(self._placeholders[4].shape)
-            self.eval_targets_lengths.set_shape(self._placeholders[5].shape)
-            self.eval_speaker_ids.set_shape(self._placeholders[6].shape)
+            self.eval_speaker_ids.set_shape(self._placeholders[5].shape)
+            self.eval_targets_lengths.set_shape(self._placeholders[6].shape)
 
     def start_threads(self, session):
         self._session = session
@@ -133,7 +133,7 @@ class Feeder:
         # Create parallel sequences containing zeros to represent a non finished sequence
         token_target = np.asarray([0.] * (len(mel_target) - 1))
         linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
-        return (input_data, mel_target, token_target, linear_target, len(mel_target), speaker_id)
+        return (input_data, mel_target, token_target, linear_target, speaker_id, len(mel_target))
 
     def make_test_batches(self):
         start = time.time()
@@ -201,7 +201,7 @@ class Feeder:
         # Create parallel sequences containing zeros to represent a non finished sequence
         token_target = np.asarray([0.] * (len(mel_target) - 1))
         linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
-        return (input_data, mel_target, token_target, linear_target, len(mel_target), speaker_id)
+        return (input_data, mel_target, token_target, linear_target, speaker_id, len(mel_target))
 
     def _prepare_batch(self, batch, outputs_per_step):
         np.random.shuffle(batch)
@@ -213,7 +213,7 @@ class Feeder:
         linear_targets = self._prepare_targets([x[3] for x in batch], outputs_per_step)
         targets_lengths = np.asarray([x[-1] for x in batch], dtype=np.int32)  # Used to mask loss
         speaker_ids = np.asarray([x[4] for x in batch], dtype=np.int32)
-        return (inputs, input_lengths, mel_targets, token_targets, linear_targets, targets_lengths, speaker_ids)
+        return (inputs, input_lengths, mel_targets, token_targets, linear_targets, speaker_ids, targets_lengths)
 
     def _prepare_inputs(self, inputs):
         max_len = max([len(x) for x in inputs])
