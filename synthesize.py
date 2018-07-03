@@ -62,6 +62,7 @@ def main():
     parser.add_argument('--text_list', default='D:/voice/MultiSpeaker/eval.txt',
                         help='Text file contains list of texts to be synthesized. Valid if mode=eval')
     parser.add_argument('--num_speakers', default=2, type=int)
+    parser.add_argument('--speaker_id', default=None, type=int)
     args = parser.parse_args()
 
     accepted_models = ['Tacotron', 'WaveNet', 'Both', 'Tacotron-2', 'MultiSpeaker']

@@ -13,6 +13,7 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 import re
 from unidecode import unidecode
 from .numbers import normalize_numbers
+from .text_kr import korean_numbers
 
 # Regular expression matching whitespace:
 _whitespace_re = re.compile(r'\s+')
@@ -90,4 +91,5 @@ def english_cleaners(text):
 
 def korean_cleaners(text):
     text = collapse_whitespace(text)
+    text = korean_numbers(text)
     return text

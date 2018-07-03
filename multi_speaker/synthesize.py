@@ -22,14 +22,21 @@ def run_live(args, checkpoint_path, hparams):
     # Generate fast greeting message
     greetings = 'Hello, Welcome to the Live testing tool. Please type a message and I will try to read it!'
     log(greetings)
+    log('press "exit" for exit')
     generate_fast(synth, greetings)
 
     # Interaction loop
     while True:
         try:
             text = input()
-            speaker_id = random.choice(list(range(1, args.num_speakers)))
-            generate_fast(synth, text, speaker_id)
+            if text == 'quit':
+                break
+            if args.speaker_id is None:
+                speaker_id = random.choice(list(range(1, args.num_speakers)))
+            else:
+                speaker_id = args.speaker_id
+            if text:
+                generate_fast(synth, text, speaker_id)
 
         except KeyboardInterrupt:
             leave = 'Thank you for testing our features. see you soon.'

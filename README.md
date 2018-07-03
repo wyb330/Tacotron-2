@@ -190,7 +190,11 @@ Training:
 > python train.py --base_dir=dataset/VCTK-Corpus --model=MultiSpeaker
 
 Synthesisie:
->  python synthesize.py --model=MultiSpeaker --text_list=MultiSpeaker/eval.txt
+> python synthesize.py --model=MultiSpeaker --text_list=MultiSpeaker/eval.txt
+
+Live synthesize
+> python synthesize.py --model=MultiSpeaker --mode=live --speaker_id=2
+
 
 # Pretrained model and Samples:
 Pre-trained models and audio samples will be added at a later date. You can however check some primary insights of the model performance (at early stages of training) [here](https://github.com/Rayhane-mamah/Tacotron-2/issues/4#issuecomment-378741465).
