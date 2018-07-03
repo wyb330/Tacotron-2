@@ -1,15 +1,16 @@
 import os
-from hparams import hparams, hparams_debug_string
+from hparams import hparams_debug_string
 from multi_speaker.synthesizer import Synthesizer
 from tqdm import tqdm
 from time import sleep
 from infolog import log
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j, j2h
+import random
+from tacotron.utils.text_kr import h2j
 
 
-def generate_fast(model, text):
-    model.synthesize(text, None, None, None, None)
+def generate_fast(model, text, speaker_id=1):
+    model.synthesize(text, None, None, None, None, speaker_id)
 
 
 def run_live(args, checkpoint_path, hparams):
@@ -27,7 +28,8 @@ def run_live(args, checkpoint_path, hparams):
     while True:
         try:
             text = input()
-            generate_fast(synth, text)
+            speaker_id = random.choice(list(range(1, args.num_speakers)))
+            generate_fast(synth, text, speaker_id)
 
         except KeyboardInterrupt:
             leave = 'Thank you for testing our features. see you soon.'
@@ -56,10 +58,15 @@ def run_eval(args, checkpoint_path, output_dir, hparams, sentences):
 
     with open(os.path.join(eval_dir, 'map.txt'), 'w') as file:
         for i, text in enumerate(tqdm(sentences)):
+            values = text.split('|')
+            if len(values) == 1:
+                raise ValueError('invalid "speaker_id|text" format')
+            speak_id = values[0]
+            text = values[1]
             if hparams.lang == 'kr':
                 # 한글을 자소 단위로 쪼갠다.
                 text = h2j(text)
-            mel_filename = synth.synthesize(text, i + 1, eval_dir, log_dir, None, i)
+            mel_filename = synth.synthesize(text, i + 1, eval_dir, log_dir, None, speak_id)
 
             file.write('{}|{}\n'.format(text, mel_filename))
     log('synthesized mel spectrograms at {}'.format(eval_dir))
@@ -94,12 +101,13 @@ def run_synthesis(args, checkpoint_path, output_dir, hparams):
     wav_dir = os.path.join(args.base_dir, args.input_dir, 'audio')
     with open(os.path.join(synth_dir, 'map.txt'), 'w') as file:
         for i, meta in enumerate(tqdm(metadata)):
-            text = meta[5]
+            speaker_id = int(meta[5])
+            text = meta[6]
             mel_filename = os.path.join(mel_dir, meta[1])
             wav_filename = os.path.join(wav_dir, meta[0])
-            mel_output_filename = synth.synthesize(text, i + 1, synth_dir, None, mel_filename)
+            mel_output_filename = synth.synthesize(text, i + 1, synth_dir, None, mel_filename, speaker_id)
 
-            file.write('{}|{}|{}|{}\n'.format(wav_filename, mel_filename, mel_output_filename, text))
+            file.write('{}|{}|{}|{}|{}\n'.format(wav_filename, mel_filename, mel_output_filename, speaker_id, text))
     log('synthesized mel spectrograms at {}'.format(synth_dir))
     return os.path.join(synth_dir, 'map.txt')
 

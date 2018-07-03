@@ -8,7 +8,7 @@ from datasets import audio
 import pyaudio
 import wave
 from infolog import log
-from tacotron.utils.text_kr import h2j, j2h
+from tacotron.utils.text_kr import j2h, is_hanguel
 
 
 class Synthesizer:
@@ -99,7 +99,7 @@ class Synthesizer:
                 audio.save_wav(wav, os.path.join(log_dir, 'wavs/speech-wav-{:05d}-linear.wav'.format(index)),
                                sr=hparams.sample_rate)
 
-            if self._hparams.lang == 'kr':
+            if is_hanguel(text):
                 text = j2h(text)
             # save alignments
             plot.plot_alignment(alignment, os.path.join(log_dir, 'plots/speech-alignment-{:05d}.png'.format(index)),

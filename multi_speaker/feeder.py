@@ -6,7 +6,7 @@ from tacotron.utils.text import text_to_sequence
 from infolog import log
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j
+from tacotron.utils.text_kr import h2j, is_hanguel
 
 _batches_per_group = 32
 
@@ -192,7 +192,7 @@ class Feeder:
 
         speaker_id = int(meta[5])
         text = meta[6]
-        if self._hparams.lang == 'kr':
+        if is_hanguel(text):
             # 한글을 자소 단위로 쪼갠다.
             text = h2j(text)
 

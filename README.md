@@ -170,6 +170,10 @@ Synthesizing the **waveforms** conditionned on previously synthesized Mel-spectr
 
 > python synthesize.py --model='WaveNet'
 
+**Note:**
+- If model argument is not provided, synthesis will default to Tacotron-2 model synthesis. (End-to-End TTS)
+- Please refer to synthesis arguments under [synthesize.py](https://github.com/Rayhane-mamah/Tacotron-2/blob/master/synthesize.py) for a set of options you can use.
+
 # Multi Speaker
 Dataset:
 
@@ -177,15 +181,16 @@ Dataset:
 
 Preprocess:
 > python -m multi_speaker.preprocess --base_dir=dataset/VCTK-Corpus --dataset=VCTK --output=dataset/VCTK-Corpus/trainging_data
+
 or
+
 > python -m multi_speaker.preprocess --base_dir=dataset/LJSpeech-1.0,dataset/korean/son --dataset=LJSpeech-1.0,KRSPEECH --output=dataset/MultiSpeaker/trainging_data
 
 Training:
 > python train.py --base_dir=dataset/VCTK-Corpus --model=MultiSpeaker
 
-**Note:**
-- If model argument is not provided, synthesis will default to Tacotron-2 model synthesis. (End-to-End TTS)
-- Please refer to synthesis arguments under [synthesize.py](https://github.com/Rayhane-mamah/Tacotron-2/blob/master/synthesize.py) for a set of options you can use.
+Synthesisie:
+>  python synthesize.py --model=MultiSpeaker --text_list=MultiSpeaker/eval.txt
 
 # Pretrained model and Samples:
 Pre-trained models and audio samples will be added at a later date. You can however check some primary insights of the model performance (at early stages of training) [here](https://github.com/Rayhane-mamah/Tacotron-2/issues/4#issuecomment-378741465).

@@ -123,7 +123,7 @@ def send_audio(path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--load_path', default='logs-MultiSpeaker/taco_pretrained/')
-    parser.add_argument('--num_speakers', default=10, type=int)
+    parser.add_argument('--num_speakers', default=2, type=int)
     parser.add_argument('--port', default=51000, type=int)
     parser.add_argument('--debug', default=False, type=bool)
     config = parser.parse_args()
