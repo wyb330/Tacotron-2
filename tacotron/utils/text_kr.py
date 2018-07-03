@@ -105,25 +105,12 @@ def korean_numbers(text):
 
 
 # Code from https://github.com/carpedm20/multi-speaker-tacotron-tensorflow/blob/master/text/korean.py
-number_checker = "([+-]?\d[\d,]*)[\.]?\d*"
+number_checker = "([+-]?[1-9][\d,]*)[\.]?\d*"
 count_checker = "(시|명|가지|살|마리|포기|송이|수|톨|통|점|개|벌|척|채|다발|그루|자루|줄|켤레|그릇|잔|마디|상자|사람|곡|병|판)"
-
-
-def normalize_number(text):
-    # text = normalize_with_dictionary(text, unit_to_kor1)
-    # text = normalize_with_dictionary(text, unit_to_kor2)
-    text = re.sub(number_checker + count_checker,
-            lambda x: number_to_korean(x, True), text)
-    text = re.sub(number_checker,
-            lambda x: number_to_korean(x, False), text)
-    return text
-
-
 num_to_kor1 = [""] + list("일이삼사오육칠팔구")
 num_to_kor2 = [""] + list("만억조경해")
 num_to_kor3 = [""] + list("십백천")
 
-#count_to_kor1 = [""] + ["하나","둘","셋","넷","다섯","여섯","일곱","여덟","아홉"]
 count_to_kor1 = [""] + ["한","두","세","네","다섯","여섯","일곱","여덟","아홉"]
 
 count_tenth_dict = {
@@ -190,6 +177,24 @@ upper_to_kor = {
         'Y': '와이',
         'Z': '지',
 }
+
+
+def normalize_with_dictionary(text, dic):
+    if any(key in text for key in dic.keys()):
+        pattern = re.compile('|'.join(re.escape(key) for key in dic.keys()))
+        return pattern.sub(lambda x: dic[x.group()], text)
+    else:
+        return text
+
+
+def normalize_number(text):
+    text = normalize_with_dictionary(text, unit_to_kor1)
+    text = normalize_with_dictionary(text, unit_to_kor2)
+    text = re.sub(number_checker + count_checker,
+            lambda x: number_to_korean(x, True), text)
+    text = re.sub(number_checker,
+            lambda x: number_to_korean(x, False), text)
+    return text
 
 
 def number_to_korean(num_str, is_count=False):
@@ -265,11 +270,12 @@ def number_to_korean(num_str, is_count=False):
 
 
 if __name__ == '__main__':
-    print(h2j("대한민국 만세"))
+    print(korean_numbers("대한민국 만세"))
     print(korean_numbers("올해는 2017년 이다."))
-    print(h2j("LA에는 많은 한국인들이 살고 있다."))
-    print(j2h(h2j("대한민국 만세")))
+    print(korean_numbers("LA에는 많은 한국인들이 살고 있다."))
+    print(j2h(korean_numbers("대한민국 만세")))
     print(j2h(korean_numbers("올해는 2017년 이다.")))
+    print(j2h(korean_numbers("그 친구는 05학번이다.")))
     print(j2h(korean_numbers("LA에는 많은 한국인들이 살고 있다.")))
     print(j2h(korean_numbers("2교대 3교대로 전환 되었지만~")))
     print(j2h(korean_numbers("면적은 대한민국 국토의 0.6%이지만, 약 980만 명이 살고 있어서 인구밀도가 높다.")))
