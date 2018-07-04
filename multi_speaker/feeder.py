@@ -202,8 +202,6 @@ class Feeder:
         # Create parallel sequences containing zeros to represent a non finished sequence
         token_target = np.asarray([0.] * (len(mel_target) - 1))
         linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
-        print(self._cleaner_names, text, input_data)
-        print()
         return (input_data, mel_target, token_target, linear_target, speaker_id, len(mel_target))
 
     def _prepare_batch(self, batch, outputs_per_step):
