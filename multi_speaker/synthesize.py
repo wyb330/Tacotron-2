@@ -6,7 +6,7 @@ from time import sleep
 from infolog import log
 import tensorflow as tf
 import random
-from tacotron.utils.text_kr import h2j
+from tacotron.utils.text_kr import h2j, is_hanguel, normalize_number
 
 
 def generate_fast(model, text, speaker_id=1):
@@ -22,7 +22,6 @@ def run_live(args, checkpoint_path, hparams):
     # Generate fast greeting message
     greetings = 'Hello, Welcome to the Live testing tool. Please type a message and I will try to read it!'
     log(greetings)
-    log('press "exit" for exit')
     generate_fast(synth, greetings)
 
     # Interaction loop
@@ -70,7 +69,8 @@ def run_eval(args, checkpoint_path, output_dir, hparams, sentences):
                 raise ValueError('invalid "speaker_id|text" format')
             speak_id = values[0]
             text = values[1]
-            if hparams.lang == 'kr':
+            if is_hanguel(text):
+                text = normalize_number(text)
                 # 한글을 자소 단위로 쪼갠다.
                 text = h2j(text)
             mel_filename = synth.synthesize(text, i + 1, eval_dir, log_dir, None, speak_id)

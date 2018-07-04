@@ -91,5 +91,5 @@ def english_cleaners(text):
 
 def korean_cleaners(text):
     text = collapse_whitespace(text)
-    text = korean_numbers(text)
+    # text = korean_numbers(text)
     return text

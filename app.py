@@ -9,7 +9,7 @@ from multi_speaker.synthesizer import Synthesizer
 from hparams import hparams
 from pydub import silence, AudioSegment
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j
+from tacotron.utils.text_kr import h2j, is_hanguel, normalize_number
 
 ROOT_PATH = "web"
 AUDIO_DIR = "audio"
@@ -93,11 +93,13 @@ def index():
 @app.route('/generate')
 def view_method():
     text = request.args.get('text')
-    jamo = h2j(text)
+    if is_hanguel(text):
+        text = normalize_number(text)
+        text = h2j(text)
     speaker_id = int(request.args.get('speaker_id'))
 
     if text:
-        return generate_audio_response(jamo, speaker_id)
+        return generate_audio_response(text, speaker_id)
     else:
         return jsonify(success=True), 200
 
