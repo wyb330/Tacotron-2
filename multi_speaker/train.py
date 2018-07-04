@@ -4,7 +4,6 @@ import os
 import time
 import tensorflow as tf
 import traceback
-
 from multi_speaker.feeder import Feeder
 from hparams import hparams_debug_string
 from multi_speaker.models import create_model
@@ -13,6 +12,7 @@ from tacotron.utils import plot, ValueWindow
 from infolog import log
 from datasets import audio
 from tqdm import tqdm
+from tacotron.utils.text_kr import j2h, is_korean_char
 
 
 def log(msg, end='\n'):
@@ -309,12 +309,16 @@ def train(log_dir, args, hparams):
                                         info='{}, {}, step={}, loss={:.5f}'.format(args.model, time_string(), step,
                                                                                    loss),
                                         max_len=target_length // hparams.outputs_per_step)
+                    input_text = sequence_to_text(input_seq)
+                    if is_korean_char(input_text):
+                        input_text = j2h(input_text)
                     # save real and predicted mel-spectrogram plot to disk (control purposes)
                     plot.plot_spectrogram(mel_prediction,
                                           os.path.join(plot_dir, 'step-{}-mel-spectrogram.png'.format(step)),
                                           info='{}, {}, step={}, loss={:.5}'.format(args.model, time_string(), step,
                                                                                     loss), target_spectrogram=target,
-                                          max_len=target_length)
+                                          max_len=target_length,
+                                          head=input_text)
                     log('Input at step {}: {}'.format(step, sequence_to_text(input_seq)))
 
             log('Tacotron training complete after {} global steps!'.format(args.tacotron_train_steps))

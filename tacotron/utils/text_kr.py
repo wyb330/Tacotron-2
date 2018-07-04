@@ -48,6 +48,13 @@ def is_korean_text(text):
     return False
 
 
+def is_korean_char(text):
+    for char in text:
+        if is_hanguel(char):
+            return True
+    return False
+
+
 def merge_j(jamos):
     if len(jamos) == 3:
         code = CHOSUNG_LIST.index(jamos[0]) * CHOSUNG + \

@@ -57,7 +57,12 @@ def plot_alignment(alignment, path, info=None, split_title=False, max_len=None):
     plt.close()
 
 
-def plot_spectrogram(pred_spectrogram, path, info=None, split_title=False, target_spectrogram=None, max_len=None):
+def plot_spectrogram(pred_spectrogram,
+                     path, info=None,
+                     split_title=False,
+                     target_spectrogram=None,
+                     max_len=None,
+                     head=None):
     if max_len is not None:
         target_spectrogram = target_spectrogram[:max_len]
         pred_spectrogram = pred_spectrogram[:max_len]
@@ -87,6 +92,8 @@ def plot_spectrogram(pred_spectrogram, path, info=None, split_title=False, targe
     im = ax2.imshow(np.rot90(pred_spectrogram), interpolation='none')
     fig.colorbar(mappable=im, shrink=0.65, orientation='horizontal', ax=ax2)
 
+    if head:
+        plt.title(head)
     plt.tight_layout()
     plt.savefig(path, format='png')
     plt.close()
