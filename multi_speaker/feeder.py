@@ -6,7 +6,7 @@ from tacotron.utils.text import text_to_sequence
 from infolog import log
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j, is_hanguel, normalize_number
+from tacotron.utils.text_kr import h2j, is_korean_text, normalize_number
 
 _batches_per_group = 32
 
@@ -192,7 +192,7 @@ class Feeder:
 
         speaker_id = int(meta[5])
         text = meta[6]
-        if is_hanguel(text):
+        if is_korean_text(text):
             text = normalize_number(text)
             # 한글을 자소 단위로 쪼갠다.
             text = h2j(text)
@@ -202,6 +202,8 @@ class Feeder:
         # Create parallel sequences containing zeros to represent a non finished sequence
         token_target = np.asarray([0.] * (len(mel_target) - 1))
         linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
+        print(self._cleaner_names, text, input_data)
+        print()
         return (input_data, mel_target, token_target, linear_target, speaker_id, len(mel_target))
 
     def _prepare_batch(self, batch, outputs_per_step):

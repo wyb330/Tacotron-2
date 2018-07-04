@@ -41,6 +41,13 @@ def is_hanguel(char):
     return True if char in HANGUEL_LIST else False
 
 
+def is_korean_text(text):
+    for char in text:
+        if 44032 < ord(char) < 55199:
+            return True
+    return False
+
+
 def merge_j(jamos):
     if len(jamos) == 3:
         code = CHOSUNG_LIST.index(jamos[0]) * CHOSUNG + \

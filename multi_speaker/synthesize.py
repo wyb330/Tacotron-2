@@ -6,7 +6,7 @@ from time import sleep
 from infolog import log
 import tensorflow as tf
 import random
-from tacotron.utils.text_kr import h2j, is_hanguel, normalize_number
+from tacotron.utils.text_kr import h2j, is_korean_text, normalize_number
 
 
 def generate_fast(model, text, speaker_id=1):
@@ -69,7 +69,7 @@ def run_eval(args, checkpoint_path, output_dir, hparams, sentences):
                 raise ValueError('invalid "speaker_id|text" format')
             speak_id = values[0]
             text = values[1]
-            if is_hanguel(text):
+            if is_korean_text(text):
                 text = normalize_number(text)
                 # 한글을 자소 단위로 쪼갠다.
                 text = h2j(text)

@@ -2,12 +2,11 @@ import numpy as np
 import os
 import threading
 import time
-import traceback
 from tacotron.utils.text import text_to_sequence
 from infolog import log
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j, is_hanguel, normalize_number
+from tacotron.utils.text_kr import h2j, is_korean_text, normalize_number
 
 _batches_per_group = 32
 
@@ -188,7 +187,7 @@ class Feeder:
         self._train_offset += 1
 
         text = meta[5]
-        if is_hanguel(text):
+        if is_korean_text(text):
             text = normalize_number(text)
             # 한글을 자소 단위로 쪼갠다.
             text = h2j(text)
