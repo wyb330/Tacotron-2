@@ -8,7 +8,7 @@ from datasets import audio
 import pyaudio
 import wave
 from infolog import log
-from tacotron.utils.text_kr import j2h, is_korean_char
+from tacotron.utils.text_kr import split_to_jamo, j2h, is_korean_char, is_korean_text, normalize_number
 
 
 class Synthesizer:
@@ -39,6 +39,9 @@ class Synthesizer:
     def synthesize(self, text, index, out_dir, log_dir, mel_filename, speaker_id):
         hparams = self._hparams
         cleaner_names = [x.strip() for x in hparams.cleaners.split(',')]
+        if is_korean_text(text):
+            text = normalize_number(text)
+            text = split_to_jamo(text, cleaner_names)
         seq = text_to_sequence(text, cleaner_names)
         feed_dict = {
             self.model.inputs: [np.asarray(seq, dtype=np.int32)],

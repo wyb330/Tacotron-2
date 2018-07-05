@@ -8,7 +8,7 @@ from datasets import audio
 import pyaudio
 import wave
 from infolog import log
-from tacotron.utils.text_kr import h2j, j2h
+from tacotron.utils.text_kr import j2h
 
 
 class Synthesizer:

@@ -6,7 +6,7 @@ from tacotron.utils.text import text_to_sequence
 from infolog import log
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j, is_korean_text, normalize_number
+from tacotron.utils.text_kr import split_to_jamo, is_korean_text, normalize_number
 
 _batches_per_group = 32
 
@@ -195,7 +195,7 @@ class Feeder:
         if is_korean_text(text):
             text = normalize_number(text)
             # 한글을 자소 단위로 쪼갠다.
-            text = h2j(text)
+            text = split_to_jamo(text, self._cleaner_names)
 
         input_data = np.asarray(text_to_sequence(text, self._cleaner_names), dtype=np.int32)
         mel_target = np.load(os.path.join(self._mel_dir, meta[1]))

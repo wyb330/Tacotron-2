@@ -55,6 +55,13 @@ def is_korean_char(text):
     return False
 
 
+def split_to_jamo(text, cleaners):
+    if 'korean_cleaners' in cleaners:
+        return h2j(text)
+    else:
+        return text
+
+
 def merge_j(jamos):
     if len(jamos) == 3:
         code = CHOSUNG_LIST.index(jamos[0]) * CHOSUNG + \

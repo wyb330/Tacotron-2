@@ -5,7 +5,7 @@ from tqdm import tqdm
 from time import sleep
 from infolog import log
 import tensorflow as tf
-from tacotron.utils.text_kr import h2j, is_korean_text, normalize_number
+from tacotron.utils.text_kr import split_to_jamo, is_korean_text, normalize_number
 
 
 def generate_fast(model, text):
@@ -59,7 +59,7 @@ def run_eval(args, checkpoint_path, output_dir, hparams, sentences):
             if is_korean_text(text):
                 text = normalize_number(text)
                 # 한글을 자소 단위로 쪼갠다.
-                text = h2j(text)
+                text = split_to_jamo(text, hparams.cleaners)
             mel_filename = synth.synthesize(text, i + 1, eval_dir, log_dir, None)
 
             file.write('{}|{}\n'.format(text, mel_filename))

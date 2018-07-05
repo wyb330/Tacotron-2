@@ -53,6 +53,10 @@ def sequence_to_text(sequence):
     return result.replace('}{', ' ')
 
 
+def cleaners_text(text, cleaner_names):
+    return _clean_text(text, cleaner_names)
+
+
 def _clean_text(text, cleaner_names):
     for name in cleaner_names:
         cleaner = getattr(cleaners, name)
