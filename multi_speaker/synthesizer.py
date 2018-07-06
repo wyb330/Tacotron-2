@@ -132,3 +132,37 @@ class Synthesizer:
         audio.save_wav(wav, out_dir, sr=hparams.sample_rate)  # Find a better way
 
         return out_dir
+
+    def play(self, text, speaker_id):
+        hparams = self._hparams
+        cleaner_names = [x.strip() for x in hparams.cleaners.split(',')]
+        seq = text_to_sequence(text, cleaner_names)
+        feed_dict = {
+            self.model.inputs: [np.asarray(seq, dtype=np.int32)],
+            self.model.input_lengths: np.asarray([len(seq)], dtype=np.int32),
+            self.model.speaker_ids: np.asarray([speaker_id], dtype=np.int32)
+        }
+
+        mels, alignment = self.session.run([self.mel_outputs, self.alignment], feed_dict=feed_dict)
+        mels = mels.reshape(-1, hparams.num_mels)  # Thanks to @imdatsolak for pointing this out
+
+        # Generate wav and read it
+        wav = audio.inv_mel_spectrogram(mels.T, hparams)
+        audio.save_wav(wav, 'temp.wav', sr=hparams.sample_rate)  # Find a better way
+
+        chunk = 512
+        f = wave.open('temp.wav', 'rb')
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
+                        channels=f.getnchannels(),
+                        rate=f.getframerate(),
+                        output=True)
+        data = f.readframes(chunk)
+        while data:
+            stream.write(data)
+            data = f.readframes(chunk)
+
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+        return mels
