@@ -6,10 +6,13 @@ from multi_speaker.synthesizer import Synthesizer
 import os
 import nltk
 from konlpy.tag import Kkma
+from tqdm import tqdm
+import numpy as np
+from datasets import audio
 
 
-def generate_fast(model, text, speaker_id):
-    mels = model.play(text, speaker_id)
+def generate_fast(model, text, speaker_id, play=True):
+    mels = model.run(text, speaker_id, play)
     return mels
 
 
@@ -20,6 +23,12 @@ def open_file(filename):
         f = open(filename)
 
     return f
+
+
+def change_file_ext(file, new_ext):
+    parts = file.split('.')
+    parts[-1] = new_ext[1:]
+    return '.'.join(parts)
 
 
 def read(args, hparams, checkpoint_path):
@@ -50,8 +59,39 @@ def read(args, hparams, checkpoint_path):
                 break
 
 
-def publish(args, hparams, checkpoint):
-    pass
+def publish(args, hparams, checkpoint_path):
+    log(hparams_debug_string())
+    if not os.path.exists(args.book):
+        raise ValueError('{}: {}'.format('No such file or directory', args.book))
+
+    speaker_id = args.speaker_id
+    synth = Synthesizer()
+    synth.load(checkpoint_path, hparams)
+
+    with open_file(args.book) as f:
+        text = f.read()
+        if args.lang == 'kr':
+            kkma = Kkma()
+            sents = kkma.sentences(text)
+        else:
+            sents = nltk.sent_tokenize(text)
+
+        full_mels = None
+        silence = np.full((100, hparams.num_mels), hparams.min_level_db, np.float32)
+        for i, line in enumerate(tqdm(sents)):
+            text = line.strip()
+            if text:
+                mels = generate_fast(synth, text, speaker_id, play=False)
+                if i > 0:
+                    full_mels = np.concatenate((full_mels, silence), axis=0)  # padding silence between sents
+                    full_mels = np.concatenate((full_mels, mels), axis=0)
+                else:
+                    full_mels = mels
+
+        save_path = change_file_ext(args.book, '.wav')
+        log('saving to wav file...')
+        wav = audio.inv_mel_spectrogram(full_mels.T, hparams)
+        audio.save_wav(wav, save_path, sr=hparams.sample_rate)
 
 
 def prepare_run(args):
@@ -68,7 +108,7 @@ def main():
     parser.add_argument('--base_dir', default='D:/voice/MultiSpeaker')
     parser.add_argument('--checkpoint', default='pretrained/', help='Path to model checkpoint')
     parser.add_argument('--model', default='MultiSpeaker')
-    parser.add_argument('--mode', default='read', help='mode of run: can be one of {}'.format(accepted_modes))
+    parser.add_argument('--mode', default='publish', help='mode of run: can be one of {}'.format(accepted_modes))
     parser.add_argument('--book', default='D:/voice/MultiSpeaker/eval.txt', required=True,
                         help='Text file contains list of texts to be synthesized')
     parser.add_argument('--speaker_id', default=2, type=int)

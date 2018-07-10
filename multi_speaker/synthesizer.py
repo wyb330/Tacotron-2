@@ -127,13 +127,12 @@ class Synthesizer:
         mels, alignment = self.session.run([self.mel_outputs, self.alignment], feed_dict=feed_dict)
         mels = mels.reshape(-1, hparams.num_mels)  # Thanks to @imdatsolak for pointing this out
 
-        # Generate wav and read it
         wav = audio.inv_mel_spectrogram(mels.T, hparams)
-        audio.save_wav(wav, out_dir, sr=hparams.sample_rate)  # Find a better way
+        audio.save_wav(wav, out_dir, sr=hparams.sample_rate)
 
         return out_dir
 
-    def play(self, text, speaker_id):
+    def run(self, text, speaker_id, play=True):
         hparams = self._hparams
         cleaner_names = [x.strip() for x in hparams.cleaners.split(',')]
         seq = text_to_sequence(text, cleaner_names)
@@ -146,23 +145,25 @@ class Synthesizer:
         mels, alignment = self.session.run([self.mel_outputs, self.alignment], feed_dict=feed_dict)
         mels = mels.reshape(-1, hparams.num_mels)  # Thanks to @imdatsolak for pointing this out
 
-        # Generate wav and read it
-        wav = audio.inv_mel_spectrogram(mels.T, hparams)
-        audio.save_wav(wav, 'temp.wav', sr=hparams.sample_rate)  # Find a better way
+        if play:
+            # Generate wav and read it
+            wav = audio.inv_mel_spectrogram(mels.T, hparams)
+            audio.save_wav(wav, 'temp.wav', sr=hparams.sample_rate)  # Find a better way
 
-        chunk = 512
-        f = wave.open('temp.wav', 'rb')
-        p = pyaudio.PyAudio()
-        stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
-                        channels=f.getnchannels(),
-                        rate=f.getframerate(),
-                        output=True)
-        data = f.readframes(chunk)
-        while data:
-            stream.write(data)
+            chunk = 512
+            f = wave.open('temp.wav', 'rb')
+            p = pyaudio.PyAudio()
+            stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
+                            channels=f.getnchannels(),
+                            rate=f.getframerate(),
+                            output=True)
             data = f.readframes(chunk)
+            while data:
+                stream.write(data)
+                data = f.readframes(chunk)
 
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+            stream.stop_stream()
+            stream.close()
+            p.terminate()
+
         return mels
